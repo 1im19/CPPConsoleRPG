@@ -61,12 +61,28 @@ void GameOver(int& matchcount)
 {
     cout << "GAME OVER" << endl << endl;
     cout << "You survived " << matchcount << " round(s)" << endl;
+    system("PAUSE");
+}
+
+void SaveGame(ofstream& save1, Player1& player1, int& matchcount)
+{
+    save1.open("Save.txt");
+    if (save1.is_open())
+    {
+        save1 << player1.MaxHP << " " << player1.Strength << " " << player1.Defense << " " << matchcount << endl;
+    }
+    else
+    {
+        cout << "Error. Unable to locate/open file" << endl;
+    }
 }
 
 void Fight1(Player1& player1, Enemy1& enemy1, int& matchcount)
 {
     int player1damage;
     int enemy1damage;
+
+    ofstream save1;
 
     system("CLS");
     cout << "Player's stats: \n\n";
@@ -76,6 +92,7 @@ void Fight1(Player1& player1, Enemy1& enemy1, int& matchcount)
     enemy1.DisplayStats();
     cout << endl;
     system("PAUSE");
+    system("CLS");
     cout << "ROUND " << matchcount << " FIGHT" << endl;
 
     do
@@ -87,7 +104,6 @@ void Fight1(Player1& player1, Enemy1& enemy1, int& matchcount)
         {
             enemy1damage = 1;
         }
-        //cout << enemy1damage << endl;
         enemy1.TakeDamage(enemy1damage);
         cout << "Enemy's current stats: \n\n";
         enemy1.DisplayStats();
@@ -97,6 +113,7 @@ void Fight1(Player1& player1, Enemy1& enemy1, int& matchcount)
 
         if (enemy1.HP <= 0)
         {
+            system("CLS");
             cout << "Enemy is down" << endl << endl;
             cout << "ROUND " << matchcount << " WIN" << endl << endl;
             Player1LevelUp(player1);
@@ -110,7 +127,6 @@ void Fight1(Player1& player1, Enemy1& enemy1, int& matchcount)
         {
             player1damage = 1;
         }
-        //cout << player1damage << endl;
         player1.TakeDamage(player1damage);
         cout << "Player's current stats: \n\n";
         player1.DisplayStats();
@@ -120,24 +136,13 @@ void Fight1(Player1& player1, Enemy1& enemy1, int& matchcount)
 
         if (player1.HP <= 0)
         {
+            system("CLS");
             cout << "Player is down" << endl << endl;
             GameOver(matchcount);
+            SaveGame(save1, player1, matchcount);
             break;
         }
     } while (player1.HP > 0 && enemy1.HP > 0);
-}
-
-void SaveGame(ofstream& save1, Player1& player1, int& matchcount)
-{
-    save1.open("Save.txt");
-    if (save1.is_open())
-    {
-        save1 <<  player1.MaxHP << " " << player1.Strength << " " << player1.Defense << " " << matchcount << endl;
-    }
-    else
-    {
-        cout << "Error. Unable to locate/open file" << endl;
-    }
 }
 
 void LoadGame(ifstream& load1, Player1& player1, int& matchcount)
@@ -157,8 +162,6 @@ void LoadGame(ifstream& load1, Player1& player1, int& matchcount)
             load1.ignore(0, '\n');
         }
         player1.HP = player1.MaxHP;
-        player1.DisplayStats();
-        system("PAUSE");
     }
     else
     {
@@ -171,13 +174,12 @@ void StartGame()
     Player1 player1;
     Enemy1 enemy1;
 
+    ofstream save1;
     ifstream load1;
 
     int matchcount;
     int menuchoice2;
     int menuchoice3;
-
-    ofstream save1;
 
     system("CLS");
     cout << "1 - New Game\n";
