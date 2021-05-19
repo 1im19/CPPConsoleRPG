@@ -2,8 +2,9 @@
 //
 
 #include <iostream>
-#include<cstdlib> 
-#include<ctime> 
+#include <cstdlib> 
+#include <ctime> 
+#include <fstream>
 
 #include "Player1.h"
 #include "Enemy1.h"
@@ -67,6 +68,7 @@ void Fight1(Player1& player1, Enemy1& enemy1, int& matchcount)
     int player1damage;
     int enemy1damage;
 
+    system("CLS");
     cout << "Player's stats: \n\n";
     player1.DisplayStats();
     cout << endl;
@@ -125,36 +127,111 @@ void Fight1(Player1& player1, Enemy1& enemy1, int& matchcount)
     } while (player1.HP > 0 && enemy1.HP > 0);
 }
 
+void SaveGame(ofstream& save1, Player1& player1, int& matchcount)
+{
+    save1.open("Save.txt");
+    if (save1.is_open())
+    {
+        save1 <<  player1.MaxHP << " " << player1.Strength << " " << player1.Defense << " " << matchcount << endl;
+    }
+    else
+    {
+        cout << "Error. Unable to locate/open file" << endl;
+    }
+}
+
+void LoadGame(ifstream& load1, Player1& player1, int& matchcount)
+{
+    load1.open("Save.txt");
+    if (load1.is_open())
+    {
+        while (!load1.eof())
+        {
+            load1 >> player1.MaxHP;
+            load1.ignore(0, ' ');
+            load1 >> player1.Strength;
+            load1.ignore(0, ' ');
+            load1 >> player1.Defense;
+            load1.ignore(0, ' ');
+            load1 >> matchcount;
+            load1.ignore(0, '\n');
+        }
+        player1.HP = player1.MaxHP;
+        player1.DisplayStats();
+        system("PAUSE");
+    }
+    else
+    {
+        cout << "Error. Unable to locate/open file" << endl;
+    }
+}
+
 void StartGame()
 {
     Player1 player1;
     Enemy1 enemy1;
 
-    int matchcount = 1;
-    int menuchoice2;
+    ifstream load1;
 
-    Fight1(player1, enemy1, matchcount);
-    do
+    int matchcount;
+    int menuchoice2;
+    int menuchoice3;
+
+    ofstream save1;
+
+    system("CLS");
+    cout << "1 - New Game\n";
+    cout << "2 - Load Game\n";
+    cout << "3 - Back to Main Menu\n";
+    cout << " >> ";
+    cin >> menuchoice2;
+
+    if (menuchoice2 >= 1 && menuchoice2 <= 2)
     {
-        cout << endl;
-        cout << "1 - Proceed to the next fight\n";
-        cout << "2 - Exit Game\n";
-        cout << " >> ";
-        cin >> menuchoice2;
         if (menuchoice2 == 1)
         {
-            matchcount++;
-            Fight1(player1, enemy1, matchcount);
+            matchcount = 1;
         }
         else if (menuchoice2 == 2)
         {
-            GameOver(matchcount);
+            LoadGame(load1, player1, matchcount);
         }
-        else
+        Fight1(player1, enemy1, matchcount);
+        do
         {
-            cout << "Invalid Input" << endl;
-        }
-    } while (menuchoice2 != 2 && player1.HP > 0);
+            cout << endl;
+            cout << "1 - Proceed to the next fight\n";
+            cout << "2 - Exit Game\n";
+            cout << " >> ";
+            cin >> menuchoice3;
+            system("CLS");
+            if (menuchoice3 == 1)
+            {
+                matchcount++;
+                Fight1(player1, enemy1, matchcount);
+            }
+            else if (menuchoice3 == 2)
+            {
+                GameOver(matchcount);
+                matchcount++;
+                SaveGame(save1, player1, matchcount);
+            }
+            else
+            {
+                cout << "Invalid Input" << endl;
+            }
+        } while (menuchoice3 != 2 && player1.HP > 0);
+    }
+    else if (menuchoice2 == 3)
+    {
+
+    }
+    else
+    {
+        cout << "\n";
+        cout << "Invalid input" << endl;
+        cout << "\n";
+    }
 }
 
 int main()
@@ -166,7 +243,8 @@ int main()
 
     do
     {
-        cout << "1im19's Console RPG\n";
+        system("CLS");
+        cout << "Console RPG\n";
         cout << "1 - Start Game\n";
         cout << "2 - Exit\n";
         cout << " >> ";
