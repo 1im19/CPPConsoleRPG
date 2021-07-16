@@ -26,6 +26,7 @@ void Player1LevelUp(Player1& player1)
         cout << endl;
         if (upgradechoice1 == 1)
         {
+            system("CLS");
             player1.AddHP();
             cout << "HP upgraded." << endl << endl;
             cout << "Player's current stats: " << endl << endl;
@@ -33,6 +34,7 @@ void Player1LevelUp(Player1& player1)
         }
         else if (upgradechoice1 == 2)
         {
+            system("CLS");
             player1.AddStrength();
             cout << "Strength upgraded." << endl << endl;
             cout << "Player's current stats: " << endl << endl;
@@ -40,6 +42,7 @@ void Player1LevelUp(Player1& player1)
         }
         else if (upgradechoice1 == 3)
         {
+            system("CLS");
             player1.AddDefense();
             cout << "Defense upgraded." << endl << endl;
             cout << "Player's current stats: " << endl << endl;
@@ -49,6 +52,7 @@ void Player1LevelUp(Player1& player1)
         {
             cout << "Invalid Input" << endl << endl;
         }
+        system("PAUSE");
     } while (upgradechoice1 < 1 || upgradechoice1 > 3);
 }
 
@@ -84,7 +88,6 @@ void Fight1(Player1& player1, Enemy1& enemy1, int& matchcount)
 
     ofstream save1;
 
-    system("CLS");
     cout << "Player's stats: \n\n";
     player1.DisplayStats();
     cout << endl;
@@ -110,10 +113,11 @@ void Fight1(Player1& player1, Enemy1& enemy1, int& matchcount)
         cout << endl;
 
         system("PAUSE");
+        system("CLS");
 
         if (enemy1.HP <= 0)
         {
-            system("CLS");
+            
             cout << "Enemy is down" << endl << endl;
             cout << "ROUND " << matchcount << " WIN" << endl << endl;
             Player1LevelUp(player1);
@@ -133,10 +137,10 @@ void Fight1(Player1& player1, Enemy1& enemy1, int& matchcount)
         cout << endl;
 
         system("PAUSE");
+        system("CLS");
 
         if (player1.HP <= 0)
         {
-            system("CLS");
             cout << "Player is down" << endl << endl;
             GameOver(matchcount);
             SaveGame(save1, player1, matchcount);
@@ -181,7 +185,6 @@ void StartGame()
     int menuchoice2;
     int menuchoice3;
 
-    system("CLS");
     cout << "1 - New Game\n";
     cout << "2 - Load Game\n";
     cout << "3 - Back to Main Menu\n";
@@ -198,7 +201,9 @@ void StartGame()
         {
             LoadGame(load1, player1, matchcount);
         }
+        system("CLS");
         Fight1(player1, enemy1, matchcount);
+        system("CLS");
         do
         {
             cout << endl;
@@ -245,7 +250,6 @@ int main()
 
     do
     {
-        system("CLS");
         cout << "Console RPG\n";
         cout << "1 - Start Game\n";
         cout << "2 - Exit\n";
@@ -253,9 +257,9 @@ int main()
         cin >> menuchoice1;
         if (menuchoice1 == 1)
         {
-            cout << "\n";
+            system("CLS");
             StartGame();
-            cout << "\n";
+            system("CLS");;
         }
         else if (menuchoice1 == 2)
         {
